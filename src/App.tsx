@@ -4,6 +4,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import MusicPlayer from "./components/MusicPlayer"; // 🔥 Import here
+
 
 const queryClient = new QueryClient();
 
@@ -11,6 +13,8 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
+            <MusicPlayer /> {/* 🎵 Add it here so it's always active */}
+
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />

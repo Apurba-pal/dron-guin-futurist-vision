@@ -1,41 +1,42 @@
-
 import { useEffect, useRef } from 'react';
+import twilightZone from '../audio/SpotiDownloader.com - twilight zone - Aaron Hibell.mp3'; // ✅ Import your audio file
 
 const MusicPlayer = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
-    const playMusic = () => {
-      if (audioRef.current) {
-        audioRef.current.volume = 0.3;
-        audioRef.current.play().catch(console.log);
+    const playAudio = () => {
+      const audio = audioRef.current;
+      if (audio) {
+        audio.volume = 0.3;
+        audio
+          .play()
+          .then(() => {
+            console.log('Music started successfully');
+          })
+          .catch((err) => {
+            console.warn('Autoplay failed:', err);
+          });
       }
+
+      // Remove listeners after first interaction
+      document.removeEventListener('click', playAudio);
+      document.removeEventListener('keydown', playAudio);
     };
 
-    // Play after user interaction
-    const handleUserInteraction = () => {
-      playMusic();
-      document.removeEventListener('click', handleUserInteraction);
-      document.removeEventListener('keydown', handleUserInteraction);
-    };
+    document.addEventListener('click', playAudio);
+    document.addEventListener('keydown', playAudio);
 
-    document.addEventListener('click', handleUserInteraction);
-    document.addEventListener('keydown', handleUserInteraction);
-
+    // Cleanup
     return () => {
-      document.removeEventListener('click', handleUserInteraction);
-      document.removeEventListener('keydown', handleUserInteraction);
+      document.removeEventListener('click', playAudio);
+      document.removeEventListener('keydown', playAudio);
     };
   }, []);
 
   return (
-    <audio 
-      ref={audioRef} 
-      loop 
-      preload="auto"
-      style={{ display: 'none' }}
-    >
-      <source src="https://p.scdn.co/mp3-preview/8b4c7e1f3d3e2a1b9c0d5e6f7a8b9c0d1e2f3a4b" type="audio/mpeg" />
+    <audio ref={audioRef} loop preload="auto" style={{ display: 'none' }}>
+      <source src={twilightZone} type="audio/mpeg" />
     </audio>
   );
 };
